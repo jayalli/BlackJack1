@@ -1,0 +1,138 @@
+import random
+
+
+# Black Jack with my understanding of the rules
+
+class Cards:
+    suits = ["Hearts", "Spades", "Clovers", "Clubs"]
+    nums = ['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace']
+    values = [{'Two': 2}, {'Three': 3}, {'Four': 4}, {'Five': 5}, {'Six': 6}, {'Seven': 7}, {'Eight': 8}, {'Nine': 9},
+              {'Ten': 10},
+              {'Jack': 10},
+              {'Queen': 10}, {'King': 10}, {'Ace': 11}]
+
+
+# cards = []
+# for i in range(1,5):
+#     for j in range(1,12):
+#             cards.append(j)
+# print(cards)
+
+class Deck(Cards):
+    decks = []
+    comp_hand = []
+    player_hand = []
+
+    def __init__(self):
+
+        for i in Cards.suits:
+            for j, x in enumerate(Cards.nums):
+                Deck.decks.append(Cards.values[j])
+
+                random.shuffle(Deck.decks)
+
+    def dealer_player(self):
+
+        Deck.player_hand.append(Deck.decks.pop(random.randint(0, 52)))
+        return Deck.player_hand
+
+    def dealer_comp(self):
+
+        Deck.comp_hand.append(Deck.decks.pop(random.randint(0, 52)))
+        return Deck.comp_hand
+
+
+mydeck = Deck()
+print(mydeck.dealer_comp())
+
+
+class Comp:
+    def __init__(self):
+        pass
+
+    comps_hand = Deck.comp_hand
+
+    def comp_pot_function(self):
+        self.comp_pot = 1000
+        return self.comp_pot
+
+    def comp_move_function(self):
+        self.comp_move = random.randint(1, 3)
+        return self.comp_move
+
+    def comp_bet_function(self):
+        self.comp_bet = 25
+        return self.comp_bet
+
+
+class Player:
+    def __init__(self):
+        pass
+
+    players_hand = Deck.player_hand
+
+    def player_pot_function(self):
+        self.player_bot = 1000
+        return self.player_bot
+
+    def player_bet_function(self):
+        self.players_bet = int(input("How much do you want to bet: "))
+
+    def player_move_function(self):
+        self.player_move = str(input("Do you want to stand or hit: "))
+        return self.player_move
+
+
+class choices:
+
+    def stand(self):
+        pass
+
+    def hit(self):
+        pass
+
+
+if __name__ == "__main__":
+    icards = Cards()
+    ideck = Deck()
+    icomp = Comp()
+    iplayer = Player()
+    player_score = 0
+    comp_score = 0
+    player_bet_amount = 0
+    comp_money = icomp.comp_pot_function()
+    player_current_hand = []
+    comp_current_hand = []
+
+    print("Welcome to BlackJack!")
+    while comp_score <= 21 and player_score <= 21:
+
+        players_turn = True
+        while players_turn:
+
+            players_move_thing = iplayer.player_move_function()
+            if players_move_thing[0].lower() == 'h':
+                player_bet_amount = int(input("How much do you want to bet?: "))
+                players_money = iplayer.player_pot_function()
+                players_money -= player_bet_amount
+                print(ideck.dealer_player())
+                for i, j in enumerate(ideck.dealer_player()):
+                    player_score += i
+            else:
+                break
+                # players_turn = False
+
+        comps_turn = True
+        while comps_turn:
+            if icomp.comp_move_function() == 1:
+                break
+            else:
+                comp_move_thing = icomp.comp_move_function()
+                comp_bet_amount = icomp.comp_bet_function()
+                comp_money -= comp_bet_amount
+                for i, j in enumerate(ideck.dealer_comp()):
+                    comp_score += i
+    if comp_score == 21 or player_score > 21:
+        print("Comp/Dealer Wins")
+    elif player_score == 21 or comp_score > 21:
+        print("Player Wins")
